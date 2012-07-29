@@ -10,8 +10,13 @@
 <constant value="50" name="TIMER_0_INTERVALL_IN_MS"/>
 
 
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
 <!--source code of node thymio-II-->
-<node name="thymio-II"># init
+<node name="thymio-II">
+# init
 var mic_led_level = 1
 var direction = 1 # 1 -> brighter, -1 -> darker
 timer.period[0] = TIMER_0_INTERVALL_IN_MS
