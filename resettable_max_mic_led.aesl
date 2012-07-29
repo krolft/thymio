@@ -1,0 +1,55 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+<constant value="3" name="NUMBER_SECS_VOICE_TO_RESET"/>
+<constant value="10" name="RESET_MIC_INTENSITY"/>
+
+
+<!--source code of node thymio-II-->
+<node name="thymio-II">var mic_max = 0
+var sound_level = 0
+var number_seconds_voice = 0
+var is_voice_led_reset = 0
+
+# init sound led to be turned off
+call leds.sound(0)
+
+# init timer (1 s) to watch for sound led to be resetted 
+timer.period[0] = 1000
+# init mic intensity threshold to enable mic event
+mic.threshold = 5
+
+sub set_sound_led
+	sound_level = mic_max / 10
+    call leds.sound(sound_level)
+
+onevent mic
+if mic.intensity > mic_max and is_voice_led_reset == 0 then
+	mic_max = mic.intensity
+	callsub set_sound_led
+end
+
+onevent timer0
+if  mic.intensity > RESET_MIC_INTENSITY then
+	number_seconds_voice += 1
+else
+	number_seconds_voice = 0
+	is_voice_led_reset = 0
+end
+if number_seconds_voice == NUMBER_SECS_VOICE_TO_RESET then
+	mic_max = 0
+	is_voice_led_reset = 1
+	callsub set_sound_led
+end
+
+
+
+</node>
+
+
+</network>

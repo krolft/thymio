@@ -1,0 +1,32 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+<constant value="25" name="MIC_LED_LEVEL_ABS_MAX"/>
+<constant value="50" name="TIMER_0_INTERVALL_IN_MS"/>
+
+
+<!--source code of node thymio-II-->
+<node name="thymio-II"># init
+var mic_led_level = 1
+var direction = 1 # 1 -> brighter, -1 -> darker
+timer.period[0] = TIMER_0_INTERVALL_IN_MS
+
+# sub routines
+sub update_mic_led_level
+mic_led_level += 1 * direction
+if mic_led_level > MIC_LED_LEVEL_ABS_MAX or mic_led_level == 0 then
+	direction *= -1
+end
+
+# daemon
+onevent timer0
+call leds.sound(mic_led_level)
+callsub update_mic_led_level</node>
+
+
+</network>

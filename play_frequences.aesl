@@ -1,0 +1,30 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+
+
+<!--source code of node thymio-II-->
+<node name="thymio-II">var freq = 200 #Hz
+
+timer.period[0] = 100 #ms
+
+onevent timer0
+if  freq > 1000 then
+	# -1 stops playback
+	call sound.freq(freq, -1)
+	# stops timer
+	timer.period[0] = 0
+elseif freq &lt;= 1000 then
+	# 0 -> plays forever
+	call sound.freq(freq, 0)
+	freq += 10
+end
+</node>
+
+
+</network>
