@@ -13,7 +13,8 @@
 
 
 <!--source code of node thymio-II-->
-<node name="thymio-II">var freq = 200 #Hz
+<node name="thymio-II">
+var freq = 200 #Hz
 
 timer.period[0] = 100 #ms
 
