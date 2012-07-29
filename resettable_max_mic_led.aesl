@@ -6,7 +6,7 @@
 
 
 <!--list of constants-->
-<constant value="3" name="NUMBER_SECS_VOICE_TO_RESET"/>
+<constant value="2" name="NUMBER_SECS_VOICE_TO_RESET"/>
 <constant value="10" name="RESET_MIC_INTENSITY"/>
 
 
@@ -28,7 +28,7 @@ call leds.sound(0)
 # init timer (1 s) to watch for sound LED to be resetted 
 timer.period[0] = 1000
 # init microphon intensity threshold to enable mic event
-mic.threshold = 5
+mic.threshold = 10
 
 sub set_sound_led
 	sound_level = mic_max / 10
