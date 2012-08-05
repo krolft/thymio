@@ -1,0 +1,74 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+<constant value="1000" name="TIME_TO_WAIT_FOR_NEXT_CLAPPING_SOUND"/>
+<constant value="10" name="INTENSITY_DIFFERENCE"/>
+
+
+<!--source code of node thymio-II-->
+<node name="thymio-II">
+var goes_up = 0
+var clap_counter = 0
+
+var is_playback = 0
+var freq = 0
+
+var curr_mic_intensity = 0
+var last_mic_intensity = 0
+
+var i = 0
+
+var timer_counter = 0
+
+mic.threshold = 1
+timer.period[0] = 100
+call sound.freq(100, -1)
+
+sub handle_mic_event
+if is_playback == 0 then
+	curr_mic_intensity = mic.intensity
+	if curr_mic_intensity >= last_mic_intensity and curr_mic_intensity > 100 then
+		goes_up = 1
+	elseif curr_mic_intensity &lt; (last_mic_intensity - INTENSITY_DIFFERENCE) then
+		if goes_up == 1 then
+			clap_counter++
+			timer_counter = 5
+			timer.period[0] = 100
+			goes_up = 0
+		end
+	end
+	last_mic_intensity = curr_mic_intensity
+end
+
+onevent mic
+callsub handle_mic_event
+
+onevent timer0
+if is_playback == 0 then
+	if timer_counter == 1 then
+		is_playback = 1
+	end
+	if timer_counter > 0 then
+		timer_counter--
+	end
+end
+if is_playback == 1 then
+	if clap_counter > 0 then
+		freq = 200 + (clap_counter * 100)
+		call sound.freq(freq, 6)
+		clap_counter--
+	else
+		goes_up = 0
+		curr_mic_intensity = 0
+		last_mic_intensity = 0
+		is_playback = 0
+	end
+end</node>
+
+
+</network>
